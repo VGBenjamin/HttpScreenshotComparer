@@ -1,0 +1,13 @@
+﻿urls: 
+- url1: /MyRelativePath1
+- url2: /fr-fr/MyRelativePath1
+
+targetDirectory: d:\temp\shots
+
+fuzziness: 20
+
+screenWidth: 
+- 1280
+- 800
+
+scriptFilePath: ./example1.js

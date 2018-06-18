@@ -1,0 +1,13 @@
+﻿urls: 
+- who: /fr-fr/qui-sommes-nous?sc_site=schmidttest
+- fabricantfrancais: /fr-fr/avantages-cuisinella/1er-fabricant-francais
+
+targetDirectory: d:\temp\shots
+
+fuzziness: 20
+
+screenWidth: 
+- 1280
+- 800
+
+scriptFilePath: ./example1.ps1
