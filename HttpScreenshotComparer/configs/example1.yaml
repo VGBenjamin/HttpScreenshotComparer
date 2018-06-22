@@ -1,6 +1,6 @@
 ﻿urls: 
-- who: /fr-fr/qui-sommes-nous?sc_site=schmidttest
-- fabricantfrancais: /fr-fr/avantages-cuisinella/1er-fabricant-francais
+  who: /fr-fr/qui-sommes-nous?sc_site=schmidttest
+  fabricantfrancais: /fr-fr/avantages-cuisinella/1er-fabricant-francais
 
 targetDirectory: d:\temp\shots
 

@@ -1,10 +1,12 @@
 ﻿urls: 
-- url1: /MyRelativePath1
-- url2: /fr-fr/MyRelativePath1
+  url1: /MyRelativePath1
+  url2: /fr-fr/MyRelativePath1
 
 targetDirectory: d:\temp\shots
 
 fuzziness: 20
+
+highlightColor: FF0000
 
 screenWidth: 
 - 1280

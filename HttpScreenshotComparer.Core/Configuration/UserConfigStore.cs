@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using HttpScreenshotComparer.Core.Configuration.Yaml;
 using HttpScreenshotComparer.Core.Utils;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
@@ -22,9 +23,11 @@ namespace HttpScreenshotComparer.Core.Configuration
 
                 var deserializer = new DeserializerBuilder()
                     .WithNamingConvention(new CamelCaseNamingConvention())
+                    //.WithTypeConverter(new UrlsTypeConverter())
                     .Build();
 
-                return deserializer.Deserialize<UserConfig>(textReader.ReadToEnd());
+                var text = textReader.ReadToEnd();
+                return deserializer.Deserialize<UserConfig>(text);
             }
         }
     }

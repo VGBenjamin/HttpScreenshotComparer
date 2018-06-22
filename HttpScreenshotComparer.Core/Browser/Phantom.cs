@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HttpScreenshotComparer.Core.Browser
 {
-    public class Phantom
+    public class Phantom : IBrowser
     {
         private readonly IConfigurationStore _configurationManager;
         private readonly ILogger<Phantom> _logger;

@@ -27,11 +27,12 @@ namespace HttpScreenshotComparer.Core.Test.Configuration
 
             result.Urls.Should().NotBeNull()
                 .And.HaveCount(2);
-            result.Urls[0].Name.Should().Be("url1");
-            result.Urls[0].Url.Should().Be("/MyRelativePath1");
+            result.Urls["url1"].Should().Be("/MyRelativePath1");
+            result.Urls["url2"].Should().Be("/fr-fr/MyRelativePath1");
 
             result.TargetDirectory.Should().Be("d:\\temp\\shots");
             result.Fuzziness.Should().Be(20);
+            result.HighlightColor.Should().Be("FF0000");
 
             result.ScreenWidth.Should().NotBeNull()
                 .And.HaveCount(2);

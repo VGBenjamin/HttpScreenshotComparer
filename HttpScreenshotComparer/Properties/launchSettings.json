@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "HttpScreenshotComparer": {
+      "commandName": "Project",
+      "commandLineArgs": "-c \"D:\\Projects\\HttpScreenshotComparer\\HttpScreenshotComparer\\configs\\example1.yaml\""
+    }
+  }
+}
