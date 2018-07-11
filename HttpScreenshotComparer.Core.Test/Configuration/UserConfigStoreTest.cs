@@ -41,6 +41,9 @@ namespace HttpScreenshotComparer.Core.Test.Configuration
             result.ScreenWidth[1].Should().Be(800);
 
             result.ScriptFilePath.Should().Be("./example1.js");
+            result.GalleryTemplate.Should().Be("./example1.cshtml");
+
+            result.Domain.Should().Be("www.test.com");
         }
     }
 }

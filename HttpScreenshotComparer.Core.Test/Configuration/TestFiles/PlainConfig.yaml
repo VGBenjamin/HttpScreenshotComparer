@@ -1,4 +1,6 @@
-﻿urls: 
+﻿domain: www.test.com
+
+urls: 
   url1: /MyRelativePath1
   url2: /fr-fr/MyRelativePath1
 
@@ -13,3 +15,5 @@ screenWidth:
 - 800
 
 scriptFilePath: ./example1.js
+
+galleryTemplate: ./example1.cshtml

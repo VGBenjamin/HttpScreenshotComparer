@@ -20,8 +20,18 @@ namespace HttpScreenshotComparer.Core.Engine
             _configurationStore = configurationStore;
         }
 
-        public void Run()
+        public void Run(ExecutionOptions options)
         {
+            if (options == null)
+                throw new ArgumentException("The options parameter is required", nameof(options));
+
+            if (string.IsNullOrEmpty(options.ConfigFile))
+                throw new ArgumentException("The config file option is required", nameof(options));
+
+            if (string.IsNullOrEmpty(options.ConfigFile))
+                throw new ArgumentException("The config file option is required", nameof(options));
+
+
             //Take the screenshots from the browser
 
             //Compare the images

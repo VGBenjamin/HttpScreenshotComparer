@@ -15,6 +15,8 @@ namespace HttpScreenshotComparer.Core.Configuration
         public List<int> ScreenWidth { get; set; }
         public string ScriptFilePath { get; set; }
         public string HighlightColor { get; set; }
+        public string GalleryTemplate { get; set; }
+        public string Domain { get; set; }
     }
 
     public class UrlsList : List<UserConfigUrl>

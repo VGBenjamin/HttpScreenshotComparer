@@ -17,20 +17,16 @@ namespace HttpScreenshotComparer
         /// <summary>
         /// https://github.com/commandlineparser/commandline
         /// </summary>
-        class Options
-        {
-            [Option('c', "config", Required = true, HelpText = "The config file who contains your settings")]
-            public string ConfigFile { get; set; }
-        }
+        
 
         private static bool _isError = false;
-        private static Options UserOptions;
+        private static ExecutionOptions UserOptions;
 
         static void Main(string[] args)
         {
-            CommandLine.Parser.Default.ParseArguments<Options>(args)
-                    .WithParsed<Options>(opts => RunOptionsAndReturnExitCode(opts))
-                    .WithNotParsed<Options>((errs) => HandleParseError(errs));
+            CommandLine.Parser.Default.ParseArguments<ExecutionOptions>(args)
+                    .WithParsed<ExecutionOptions>(opts => RunOptionsAndReturnExitCode(opts))
+                    .WithNotParsed<ExecutionOptions>((errs) => HandleParseError(errs));
 
             if (!_isError)
             {
@@ -46,8 +42,6 @@ namespace HttpScreenshotComparer
 
                 var userConfigStore = serviceProvider.GetService<IUserConfigStore>();
                 var userConfig = userConfigStore.ReadUserConfig(UserOptions.ConfigFile);
-
-
 
                 var scriptPath = "D:\\Progz\\phantom2.5\\node_modules\\phantomjs25-beta\\lib\\phantom\\bin\\cap.js";
 
@@ -85,7 +79,7 @@ namespace HttpScreenshotComparer
             }            
         }
 
-        private static void RunOptionsAndReturnExitCode(Options opts)
+        private static void RunOptionsAndReturnExitCode(ExecutionOptions opts)
         {
             UserOptions = opts;
         }
