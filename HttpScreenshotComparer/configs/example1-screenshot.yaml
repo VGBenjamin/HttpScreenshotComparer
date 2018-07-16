@@ -4,14 +4,12 @@ urls:
   who: /fr-fr/qui-sommes-nous
   fabricantfrancais: /fr-fr/avantages-cuisinella
 
-targetDirectory: d:\temp\shots
+targetDirectory: d:\temp\domain-#yyyyMMdd-hhmm#
 
-fuzziness: 20
+numberOfThreads: 10
 
 screenWidth: 
 - 1280
 - 800
 
 scriptFilePath: ./example1.ps1
-
-galleryTemplate: ./example1.cshtml

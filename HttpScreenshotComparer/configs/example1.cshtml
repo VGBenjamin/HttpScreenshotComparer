@@ -1,1 +1,33 @@
 ﻿@model HttpScreenshotComparer.Core.GalleryGenerator.GalleryModel
+
+<html>
+<head>
+</head>
+<body>
+    <h1>Comparision of the screenshot from: @Model.SourceDirectory to @Model.TargetDirectory</h1>
+    <table>
+        <thead>
+            <tr>
+                <td>Url</td>
+                <td>% Difference</td>
+                <td>Source</td>
+                <td>Target</td>
+                <td>Difference</td>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var line in Model.Lines.OrderByDescending(l => l.DifferenceRate))
+        {
+            <tr>
+                <td><a href="@line.Url">@line.Name</a></td>
+                <td>@line.DifferenceRate</td>
+
+                <td><img src="@line.SourceImage" /></td>
+                <td><img src="@line.TargetImage" /></td>
+                <td><img src="@line.DifferencesImage" /></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</body>
+</html>

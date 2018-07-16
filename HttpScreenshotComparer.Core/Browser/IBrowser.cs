@@ -6,6 +6,6 @@ namespace HttpScreenshotComparer.Core.Browser
 {
     public interface IBrowser
     {
-        void ExecuteScript(string scriptPath);
+        void ExecuteScript(string scriptPath, IScriptArguments arguments);
     }
 }

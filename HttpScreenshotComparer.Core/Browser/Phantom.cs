@@ -22,7 +22,12 @@ namespace HttpScreenshotComparer.Core.Browser
             _logger = logger;
         }
 
-        public void ExecuteScript(string scriptPath)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptPath"></param>
+        /// <param name="arguments">Arguments separated by a space character</param>
+        public void ExecuteScript(string scriptPath, IScriptArguments arguments)
         {
             try
             {
@@ -34,7 +39,7 @@ namespace HttpScreenshotComparer.Core.Browser
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     FileName = _configurationManager.PhantomJsExePath,
-                    Arguments = scriptPath
+                    Arguments = $"{scriptPath} {arguments.ToString()}"
                 };
 
                 //* Set your output and error (asynchronous) handlers
@@ -50,11 +55,10 @@ namespace HttpScreenshotComparer.Core.Browser
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error when calling phantomjs");
+                _logger.LogError("Error when calling phantomjs", ex);
                 throw;
             }
 
         }
     }
-
 }

@@ -31,6 +31,7 @@ namespace HttpScreenshotComparer.Core.Test.Configuration
             result.Urls["url2"].Should().Be("/fr-fr/MyRelativePath1");
 
             result.TargetDirectory.Should().Be("d:\\temp\\shots");
+            result.SourceDirectory.Should().Be("d:\\temp\\from");
             result.Fuzziness.Should().Be(20);
             result.HighlightColor.Should().Be("FF0000");
 

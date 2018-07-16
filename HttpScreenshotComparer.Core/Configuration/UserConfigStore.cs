@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using HttpScreenshotComparer.Core.Configuration.Yaml;
 using HttpScreenshotComparer.Core.Utils;
 using YamlDotNet.RepresentationModel;
 using YamlDotNet.Serialization;
@@ -12,7 +11,7 @@ namespace HttpScreenshotComparer.Core.Configuration
 {
     public class UserConfigStore : IUserConfigStore
     {
-        public UserConfig ReadUserConfig(string filePath)
+        public IUserConfig ReadUserConfig(string filePath)
         {
             var path = PathUtils.MapPath(filePath);
 

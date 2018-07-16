@@ -2,6 +2,6 @@
 {
     public interface IUserConfigStore
     {
-        UserConfig ReadUserConfig(string filePath);
+        IUserConfig ReadUserConfig(string filePath);
     }
 }

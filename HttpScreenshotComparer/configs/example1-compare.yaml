@@ -1,0 +1,10 @@
+﻿sourceDirectory: d:\temp\from
+targetDirectory: d:\temp\to
+
+fuzziness: 20
+
+highlightColor: FF0000
+
+numberOfThreads: 10
+
+galleryTemplate: ./example1.cshtml

@@ -58,7 +58,10 @@ namespace HttpScreenshotComparer
                     Console.ResetColor();
                 };
 
-                phantom.ExecuteScript(scriptPath);
+                phantom.ExecuteScript(scriptPath, new ScriptArguments()
+                {
+                    
+                });
             }
           
             Console.WriteLine("END!");
