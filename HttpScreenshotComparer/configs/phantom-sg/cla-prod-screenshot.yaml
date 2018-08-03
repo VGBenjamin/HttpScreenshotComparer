@@ -1,0 +1,17 @@
+﻿domain: https://www.ma.cuisinella
+
+urls: 
+  nouscontacter: /fr-fr/nous-contacter
+  fabricantfrancais: /fr-fr/avantages-cuisinella
+
+targetDirectory: d:\temp\cla-#yyyyMMdd-hhmm#
+
+numberOfThreads: 11
+
+screenWidth: 
+- 1280
+- 800
+
+scriptFilePath: ./phantom-sg.js
+
+browser: phantom

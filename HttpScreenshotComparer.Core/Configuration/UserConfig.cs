@@ -26,14 +26,39 @@ namespace HttpScreenshotComparer.Core.Configuration
         }
 
         public string TargetDirectory { get; set; }
+
+        private string _targetDirectoryReplaced;
+        public string TargetDirectoryReplaced
+            => _targetDirectoryReplaced ?? (_targetDirectoryReplaced = ReplaceTokens(TargetDirectory));
+
         public string ResultDirectory { get; set; }
 
         public int Fuzziness { get; set; }
         public List<int> ScreenWidth { get; set; }
         public string ScriptFilePath { get; set; }
+
+        public string ScriptFileFullPath { get; set; }
+
         public string HighlightColor { get; set; }
         public string GalleryTemplate { get; set; }
         public string Domain { get; set; }
         public int NumberOfThreads { get; set; }
+
+        private string _browser;
+        public string Browser
+        {
+            get => _browser;
+            set
+            {
+                BrowserEnum val = default(BrowserEnum);
+                if (!Enum.TryParse(value, true, out val))
+                {
+                    throw new ArgumentException($"The value {value} is not a correct value for the parameter '{Browser}'");
+                }
+                BrowserAsEnum = val;
+                _browser = value;
+            }
+        }
+        public BrowserEnum BrowserAsEnum { get; private set; }
     }
 }

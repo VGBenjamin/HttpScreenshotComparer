@@ -20,3 +20,5 @@ screenWidth:
 scriptFilePath: ./example1.js
 
 galleryTemplate: ./example1.cshtml
+
+browser: chrome

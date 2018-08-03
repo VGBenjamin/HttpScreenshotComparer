@@ -4,11 +4,11 @@ using System.Text;
 
 namespace HttpScreenshotComparer.Core.Browser
 {
-    public class PhantomResponseEventArgs : EventArgs
+    public class BrowserResponseEventArgs : EventArgs
     {
         public string Response { get; set; }
 
-        public PhantomResponseEventArgs(string response)
+        public BrowserResponseEventArgs(string response)
         {
             Response = response;
         }

@@ -38,4 +38,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="configs\phantom-example1\" />
+  </ItemGroup>
+
 </Project>

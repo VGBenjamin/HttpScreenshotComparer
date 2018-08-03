@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using CommandLine;
 using CommandLine.Text;
 using HttpScreenshotComparer.Core.Browser;
 using HttpScreenshotComparer.Core.Configuration;
+using HttpScreenshotComparer.Core.Engine;
+using HttpScreenshotComparer.Core.GalleryGenerator;
+using HttpScreenshotComparer.Core.Image;
+using HttpScreenshotComparer.Core.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,7 +25,7 @@ namespace HttpScreenshotComparer
         
 
         private static bool _isError = false;
-        private static ExecutionOptions UserOptions;
+        private static ExecutionOptions _userOptions;
 
         static void Main(string[] args)
         {
@@ -40,40 +45,35 @@ namespace HttpScreenshotComparer
                 var serviceCollection = new ServiceCollection();
                 var serviceProvider = ConfigureServices(serviceCollection, config);
 
-                var userConfigStore = serviceProvider.GetService<IUserConfigStore>();
-                var userConfig = userConfigStore.ReadUserConfig(UserOptions.ConfigFile);
+                //var userConfigStore = serviceProvider.GetService<IUserConfigStore>();
+                //var userConfig = userConfigStore.ReadUserConfig();
 
-                var scriptPath = "D:\\Progz\\phantom2.5\\node_modules\\phantomjs25-beta\\lib\\phantom\\bin\\cap.js";
+                var logger = serviceProvider.GetService<ILogger<Program>>();
 
-                var phantom = serviceProvider.GetRequiredService<Phantom>();
-                phantom.OutputDataReceived += (sender, eventArgs) =>
+                try
                 {
-                    Console.WriteLine(eventArgs.Response);
-                };
-
-                phantom.ErrorDataReceived += (sender, eventArgs) =>
+                    var engine = serviceProvider.GetService<IEngine>();
+                    engine.Run(_userOptions);
+                }
+                catch (Exception ex)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(eventArgs.Response);
-                    Console.ResetColor();
-                };
+                    logger.LogError(EventIds.GeneralUnexpectedException, ex, "Unexpected exception");
+                    throw;
+                }
 
-                phantom.ExecuteScript(scriptPath, new ScriptArguments()
-                {
-                    
-                });
+                NLog.LogManager.Shutdown();
             }
-          
+
             Console.WriteLine("END!");
             Console.ReadKey();
         }
 
-        private static void HandleParseError(IEnumerable<Error> errs)
+        private static void HandleParseError(IEnumerable<Error> errors)
         {
-            if (errs?.Count() > 0)
+            if (errors?.Count() > 0)
             {
                 Console.WriteLine($"The command parameters are incorrect. Errors: ");
-                foreach (var error in errs)
+                foreach (var error in errors)
                 {
                     Console.WriteLine(error);                    
                 }
@@ -84,19 +84,24 @@ namespace HttpScreenshotComparer
 
         private static void RunOptionsAndReturnExitCode(ExecutionOptions opts)
         {
-            UserOptions = opts;
+            _userOptions = opts;
         }
 
         private static IServiceProvider ConfigureServices(ServiceCollection services, IConfiguration config)
         {
             //Runner is the custom class
-            services.AddTransient<Phantom>();
-
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+
             services.AddSingleton<IConfigurationStore, ConfigurationStore>();
             services.AddSingleton<IUserConfigStore, UserConfigStore>();
             services.AddSingleton<IConfiguration>(config);
+            services.AddSingleton<IEngine, Engine>();
+            services.AddSingleton<IBrowser, Phantom>();
+            services.AddSingleton<IRazorRenderer, RazorRenderer>();
+            services.AddSingleton<IImageComparer, ImageComparer>();
+            services.AddSingleton<IImageResizer, ImageResizer>();
+            services.AddSingleton<IBrowserFactory, BrowserFactory>();
 
             services.AddLogging((builder) => builder.SetMinimumLevel(LogLevel.Trace));
 
@@ -107,6 +112,7 @@ namespace HttpScreenshotComparer
             //configure NLog
             loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
             NLog.LogManager.LoadConfiguration("nlog.config");
+      
 
             return serviceProvider;
 

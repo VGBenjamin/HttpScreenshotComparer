@@ -1,0 +1,18 @@
+﻿domain: https://www.ma.cuisinella
+
+urls: 
+  who: /fr-fr/qui-sommes-nous
+  fabricantfrancais: /fr-fr/avantages-cuisinella
+  histoire: /fr-fr/success-story
+
+targetDirectory: d:\temp\preprod-#yyyyMMdd-hhmm#
+
+numberOfThreads: 1
+
+screenWidth: 
+- 1280
+- 800
+
+scriptFilePath: ./takescreenshot.js
+
+browser: chrome

@@ -26,7 +26,10 @@ namespace HttpScreenshotComparer.Core.Configuration
                     .Build();
 
                 var text = textReader.ReadToEnd();
-                return deserializer.Deserialize<UserConfig>(text);
+                var deserialized = deserializer.Deserialize<UserConfig>(text);
+                deserialized.ScriptFileFullPath =
+                    Path.GetFullPath($"{Path.GetDirectoryName(filePath)}{PathUtils.MapPath(deserialized.ScriptFilePath)}");
+                return deserialized;
             }
         }
     }

@@ -24,6 +24,7 @@ namespace HttpScreenshotComparer.Core.Test.Utils
             yield return new object[] { "c:\\test.ps1", $"c:\\test.ps1" };
         }
 
+        #region MapPath
         [Theory]
         [MemberData(nameof(GetPaths))]
         public void MapPath_Test(string input, string expected)
@@ -34,6 +35,22 @@ namespace HttpScreenshotComparer.Core.Test.Utils
             //Assert
             result.Should().Be(expected);
         }
+        #endregion
+
+        #region SanitizePath
+        [Theory]
+        [InlineData(@"thisIsValid.txt", @"thisIsValid.txt")]
+        [InlineData(@"thisIsNotValid\3\\_3.txt", "thisIsNotValid_3__3.txt")]
+        [InlineData(@"thisIsNotValid.t\xt", "thisIsNotValid.t_xt")]
+        [InlineData("aUx.txt", "_reservedWord_.txt")]
+        [InlineData("auxillary.txt", "auxillary.txt")]
+        public void SanitizeFileNameTest(string input, string expected)
+        {
+            var result = PathUtils.SanitizeFileName(input);
+            input.Should().Be(expected);
+        }
+
+        #endregion
 
     }
 }

@@ -16,7 +16,7 @@ namespace HttpScreenshotComparer.Core.Configuration
         private string _configMappedPath;
         public string ConfigMappedPath => _configMappedPath ?? (_configMappedPath = PathUtils.MapPath(ConfigFile));
 
-        [Option('r', "domain", Required = false, HelpText = "The domain to capture. If specify this will override the setting from the yaml config file.")]
+        [Option('d', "domain", Required = false, HelpText = "The domain to capture. If specify this will override the setting from the yaml config file.")]
         public string Domain { get; set; }
 
         [Option('m', "mode", Required = true, HelpText = "The mode of execution. It can be screenshot of compare")]

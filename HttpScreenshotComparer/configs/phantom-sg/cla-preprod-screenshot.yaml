@@ -13,3 +13,5 @@ screenWidth:
 - 800
 
 scriptFilePath: ./example1.ps1
+
+browser: phantom

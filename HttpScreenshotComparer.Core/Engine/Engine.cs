@@ -8,29 +8,33 @@ using HttpScreenshotComparer.Core.Browser;
 using HttpScreenshotComparer.Core.Configuration;
 using HttpScreenshotComparer.Core.GalleryGenerator;
 using HttpScreenshotComparer.Core.Image;
+using HttpScreenshotComparer.Core.Logging;
+using HttpScreenshotComparer.Core.Utils;
 using Microsoft.Extensions.Logging;
 
 namespace HttpScreenshotComparer.Core.Engine
 {
-    public class Engine
+    public class Engine : IEngine
     {
         private readonly IImageComparer _imageComparer;
-        private readonly IBrowser _browser;
         private readonly IConfigurationStore _configurationStore;
         private readonly IUserConfigStore _userConfigStore;
-        private readonly ILogger _logger;
+        private readonly ILogger<Engine> _logger;
+        private readonly IBrowserFactory _browserFactory;
 
-        public Engine(IImageComparer imageComparer, IBrowser browser, IConfigurationStore configurationStore, IUserConfigStore userConfigStore, ILogger logger)
+        public Engine(IImageComparer imageComparer, IConfigurationStore configurationStore, IUserConfigStore userConfigStore, ILogger<Engine> logger, IBrowserFactory browserFactory)
         {
             _imageComparer = imageComparer;
-            _browser = browser;
             _configurationStore = configurationStore;
             _userConfigStore = userConfigStore;
             _logger = logger;
+            _browserFactory = browserFactory;
         }
 
         public void Run(ExecutionOptions options)
         {
+            _logger.LogTrace("Starting the engine...");
+
             if (options == null)
                 throw new ArgumentException("The options parameter is required", nameof(options));
 
@@ -41,7 +45,17 @@ namespace HttpScreenshotComparer.Core.Engine
                 throw new ArgumentException($"Some options are not valid. Errors: {error}", nameof(options));
             }
 
-            var userConfig = _userConfigStore.ReadUserConfig(options.ConfigMappedPath);
+            IUserConfig userConfig;
+            try
+            {
+                
+                userConfig = _userConfigStore.ReadUserConfig(options.ConfigMappedPath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(EventIds.UserConfigReadException, ex, "Error when reading the user configuration yaml file");
+                throw;
+            }
 
             if (options.Mode == ExecutionMode.Screenshot)
                 TakeScreenshots(options, userConfig);
@@ -51,6 +65,8 @@ namespace HttpScreenshotComparer.Core.Engine
 
         protected void CompareScreenshots(ExecutionOptions options, IUserConfig userConfig)
         {
+            _logger.LogDebug("Starting the compare mode");
+
             var galleryModel = new GalleryModel
             {
                 SourceDirectory = userConfig.SourceDirectory,
@@ -129,24 +145,46 @@ namespace HttpScreenshotComparer.Core.Engine
         //Take the screenshots from the browser
         protected void TakeScreenshots(ExecutionOptions options, IUserConfig userConfig)
         {
+            _logger.LogDebug("Starting the screenshot mode");
+
             var parallelOptions = new ParallelOptions()
             {
                 MaxDegreeOfParallelism = userConfig.NumberOfThreads <= 0 ? 10 : userConfig.NumberOfThreads
             };
+
+            var browser = _browserFactory.GetBrowserFromConfig(userConfig);
             
             Parallel.ForEach(userConfig.Urls, parallelOptions, (url) =>
             {
+                _logger.LogInformation($"Screenshoting: '{url}'");
+
                 foreach (var width in userConfig.ScreenWidth)
                 {
                     var argument = new ScriptArguments()
                     {
                         ScreenWidth = width,
-                        UrlName = url.Key
+                        UrlName = url.Key,
+                        Url =  UriUtils.CombineUriToString(userConfig.Domain, url.Value),
+                        TargetPath = GetTargetPath(userConfig, url.Key, width)
                     };
-                    _browser.ExecuteScript(url.Value, argument); //TODO : add the parameters
-                }
-                
+                    browser.ErrorDataReceived += (sender, args) =>
+                    {
+                        _logger.LogError(EventIds.BrowserErrorMessage, $"BROWSER ERROR : {args.Response}");
+                    };
+                    browser.OutputDataReceived += (sender, args) =>
+                    {
+                        _logger.LogInformation(EventIds.BrowserErrorMessage, $"BROWSER : {args.Response}");
+                    };
+                    browser.ExecuteScript(userConfig.ScriptFileFullPath, argument);
+                }                
             });
+        }
+
+        private string GetTargetPath(IUserConfig userConfig, string urlName, int width)
+        {
+            var filename = PathUtils.SanitizeFileName($"{urlName}_{width}.jpg");
+            var filePath = Path.Combine(userConfig.TargetDirectoryReplaced, filename);
+            return PathUtils.MapPath(filePath);
         }
     }
 }

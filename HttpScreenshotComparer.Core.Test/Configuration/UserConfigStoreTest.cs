@@ -18,6 +18,7 @@ namespace HttpScreenshotComparer.Core.Test.Configuration
             var userConfigStore = new UserConfigStore();
             var currentPath = Directory.GetCurrentDirectory();
             var configPath = $"{currentPath}\\Configuration\\TestFiles\\PlainConfig.yaml";
+            var scriptFullPath = $"{currentPath}\\Configuration\\TestFiles\\example1.js";
 
             //Act
             var result = userConfigStore.ReadUserConfig(configPath);
@@ -45,6 +46,9 @@ namespace HttpScreenshotComparer.Core.Test.Configuration
             result.GalleryTemplate.Should().Be("./example1.cshtml");
 
             result.Domain.Should().Be("www.test.com");
+
+            result.BrowserAsEnum.Should().Be(BrowserEnum.Chrome);
+            result.ScriptFileFullPath.Should().Be(scriptFullPath);
         }
     }
 }
