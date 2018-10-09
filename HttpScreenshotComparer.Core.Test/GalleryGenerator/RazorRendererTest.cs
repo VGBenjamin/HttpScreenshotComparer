@@ -25,7 +25,7 @@ namespace HttpScreenshotComparer.Core.Test.GalleryGenerator
                 Prop1 = 1,
                 Prop2 = "Test"
             };
-            var razorRenderer = new RazorRenderer();
+            var razorRenderer = new RazorRenderer(null);
 
             //Act
             var ex = Assert.Throws<ArgumentNullException>(() => razorRenderer.Render(string.Empty, myClass));
@@ -38,7 +38,7 @@ namespace HttpScreenshotComparer.Core.Test.GalleryGenerator
         public void TestRazorRenderWithNullModel()
         {
             //Assign            
-            var razorRenderer = new RazorRenderer();
+            var razorRenderer = new RazorRenderer(null);
 
             //Act
             var ex = Assert.Throws<ArgumentNullException>(() => razorRenderer.Render<MyClass>("coucou", null));
@@ -56,7 +56,7 @@ namespace HttpScreenshotComparer.Core.Test.GalleryGenerator
                 Prop1: @Model.Prop1, Prop2: @Model.Prop2"
                                     };
 
-            var razorRendererMoq = new Mock<RazorRenderer>(); //To Allow the debug
+            var razorRendererMoq = new Mock<RazorRenderer>(null); //To Allow the debug
             razorRendererMoq.Setup(rr => rr.GetViewContent(It.IsAny<string>()))
                             .Returns(() => templateValue);
 
@@ -84,7 +84,7 @@ namespace HttpScreenshotComparer.Core.Test.GalleryGenerator
                 Prop1: @Model.Prop1, Prop2: @Model.Prop2"
                                     };
 
-            var razorRendererMoq = new Mock<RazorRenderer>(); //To Allow the debug
+            var razorRendererMoq = new Mock<RazorRenderer>(null); //To Allow the debug
             razorRendererMoq.Setup(rr => rr.GetViewContent(It.IsAny<string>()))
                             .Returns(() => templateValue);
 

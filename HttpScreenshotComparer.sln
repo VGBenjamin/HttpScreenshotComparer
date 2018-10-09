@@ -11,18 +11,32 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HttpScreenshotComparer.Core
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		D_Compare|Any CPU = D_Compare|Any CPU
+		Debug compare|Any CPU = Debug compare|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{23175F80-1834-44D3-A743-0E525AD20A90}.D_Compare|Any CPU.ActiveCfg = D_Compare|Any CPU
+		{23175F80-1834-44D3-A743-0E525AD20A90}.D_Compare|Any CPU.Build.0 = D_Compare|Any CPU
+		{23175F80-1834-44D3-A743-0E525AD20A90}.Debug compare|Any CPU.ActiveCfg = Debug compare|Any CPU
+		{23175F80-1834-44D3-A743-0E525AD20A90}.Debug compare|Any CPU.Build.0 = Debug compare|Any CPU
 		{23175F80-1834-44D3-A743-0E525AD20A90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23175F80-1834-44D3-A743-0E525AD20A90}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23175F80-1834-44D3-A743-0E525AD20A90}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23175F80-1834-44D3-A743-0E525AD20A90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.D_Compare|Any CPU.ActiveCfg = D_Compare|Any CPU
+		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.D_Compare|Any CPU.Build.0 = D_Compare|Any CPU
+		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.Debug compare|Any CPU.ActiveCfg = Debug compare|Any CPU
+		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.Debug compare|Any CPU.Build.0 = Debug compare|Any CPU
 		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9773F23-0B29-4BFD-BD5C-A29FDD6A55A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF674457-D875-4758-95BA-61FB3CD93CF7}.D_Compare|Any CPU.ActiveCfg = D_Compare|Any CPU
+		{DF674457-D875-4758-95BA-61FB3CD93CF7}.D_Compare|Any CPU.Build.0 = D_Compare|Any CPU
+		{DF674457-D875-4758-95BA-61FB3CD93CF7}.Debug compare|Any CPU.ActiveCfg = Debug compare|Any CPU
+		{DF674457-D875-4758-95BA-61FB3CD93CF7}.Debug compare|Any CPU.Build.0 = Debug compare|Any CPU
 		{DF674457-D875-4758-95BA-61FB3CD93CF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DF674457-D875-4758-95BA-61FB3CD93CF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF674457-D875-4758-95BA-61FB3CD93CF7}.Release|Any CPU.ActiveCfg = Release|Any CPU

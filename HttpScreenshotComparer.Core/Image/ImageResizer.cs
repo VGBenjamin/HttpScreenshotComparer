@@ -6,7 +6,6 @@ using ImageMagick;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Transforms;
 
 namespace HttpScreenshotComparer.Core.Image
 {

@@ -21,14 +21,19 @@ namespace HttpScreenshotComparer.Core.Engine
         private readonly IUserConfigStore _userConfigStore;
         private readonly ILogger<Engine> _logger;
         private readonly IBrowserFactory _browserFactory;
+        private readonly IDirectoryUtils _directoryUtils;
+        private readonly IRazorRenderer _razorRenderer;
 
-        public Engine(IImageComparer imageComparer, IConfigurationStore configurationStore, IUserConfigStore userConfigStore, ILogger<Engine> logger, IBrowserFactory browserFactory)
+        public Engine(IImageComparer imageComparer, IConfigurationStore configurationStore, IUserConfigStore userConfigStore, 
+            ILogger<Engine> logger, IBrowserFactory browserFactory, IDirectoryUtils directoryUtils, IRazorRenderer razorRenderer)
         {
             _imageComparer = imageComparer;
             _configurationStore = configurationStore;
             _userConfigStore = userConfigStore;
             _logger = logger;
             _browserFactory = browserFactory;
+            _directoryUtils = directoryUtils;
+            _razorRenderer = razorRenderer;
         }
 
         public void Run(ExecutionOptions options)
@@ -69,38 +74,52 @@ namespace HttpScreenshotComparer.Core.Engine
 
             var galleryModel = new GalleryModel
             {
-                SourceDirectory = userConfig.SourceDirectory,
-                TargetDirectory = userConfig.TargetDirectory,                
+                SourceDirectory = GetDirectory(userConfig.SourceDirectory),
+                TargetDirectory = GetDirectory(userConfig.TargetDirectory), 
+                ResultDirectory = _directoryUtils.GenerateDirectoryFromPattern(userConfig.ResultDirectory)
             };
+
+            if (!Directory.Exists(galleryModel.ResultDirectory))
+            {
+                try
+                {
+                    Directory.CreateDirectory(galleryModel.ResultDirectory);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(EventIds.CannotCreateeResutFolder, ex, $"Cannot create the directory {galleryModel.ResultDirectory}");
+                    throw;
+                }
+            }
 
             var parallelOptions = new ParallelOptions()
             {
                 MaxDegreeOfParallelism = userConfig.NumberOfThreads <= 0 ? 10 : userConfig.NumberOfThreads
             };
             
-            Parallel.ForEach(Directory.GetFiles(userConfig.SourceDirectory), parallelOptions, (sourceFile) =>
+            Parallel.ForEach(Directory.GetFiles(galleryModel.SourceDirectory), parallelOptions, (sourceFile) =>
             {
-                var targetFile = sourceFile.Replace(userConfig.SourceDirectory, userConfig.TargetDirectory);
-                var diffFile = sourceFile.Replace(userConfig.SourceDirectory, userConfig.ResultDirectory);
+                var targetFile = sourceFile.Replace(galleryModel.SourceDirectory, galleryModel.TargetDirectory);
+                var resultFile = sourceFile.Replace(galleryModel.SourceDirectory, galleryModel.ResultDirectory);
 
                 //Check if the diff file already exist and delete it if necessary
-                CheckIfDiffFileExistAndDeleteItIsNecessary(diffFile);
+                CheckIfDiffFileExistAndDeleteItIsNecessary(resultFile);
 
                 if (File.Exists(targetFile))
                 {
                     //Compare the images
-                    var percentageOfDifference = _imageComparer.Compare(sourceFile, targetFile, userConfig.Fuzziness, diffFile, userConfig.HighlightColor);
+                    var percentageOfDifference = _imageComparer.Compare(sourceFile, targetFile, userConfig.Fuzziness, resultFile, userConfig.HighlightColor);
 
                     var urlTuple = GetUrlTupleFromUserConfig(userConfig, sourceFile);
 
                     galleryModel.Lines.Add(new GalleryLine()
                     {
                         DifferenceRate = percentageOfDifference,
-                        DifferencesImage = diffFile,
+                        DifferencesImage = resultFile,
                         SourceImage = sourceFile,
                         TargetImage = targetFile,
-                        Name = urlTuple?.Key,
-                        Url = urlTuple?.Value
+                        Name = Path.GetFileName(sourceFile),
+                        //Url = urlTuple?.Value
                     });
                 }
                 else
@@ -110,10 +129,30 @@ namespace HttpScreenshotComparer.Core.Engine
             });
 
             //Create the galleries
+            try
+            {
+                _razorRenderer.RenderAndSave(userConfig.GalleryTemplateFullPath, galleryModel, userConfig.GalleryResult);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error when rendering the gallery of differences. Template: '{userConfig.GalleryTemplateFullPath}'");
+                throw;
+            }
+        }
+
+        private string GetDirectory(string directory)
+        {
+            if (directory.Contains("#"))
+                return _directoryUtils.GetLatestDirectoryFromPattern(directory);
+
+            return directory;
         }
 
         internal KeyValuePair<string, string>? GetUrlTupleFromUserConfig(IUserConfig userConfig, string fileFullPath)
         {
+
+            //https://stackoverflow.com/questions/5337683/how-to-set-extended-file-properties 
+
             if (string.IsNullOrEmpty(fileFullPath))
                 return null;
 

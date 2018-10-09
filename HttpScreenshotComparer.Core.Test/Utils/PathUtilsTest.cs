@@ -47,7 +47,7 @@ namespace HttpScreenshotComparer.Core.Test.Utils
         public void SanitizeFileNameTest(string input, string expected)
         {
             var result = PathUtils.SanitizeFileName(input);
-            input.Should().Be(expected);
+            result.Should().Be(expected);
         }
 
         #endregion

@@ -2,7 +2,7 @@
   "profiles": {
     "HttpScreenshotComparer": {
       "commandName": "Project",
-      "commandLineArgs": "-c \"D:\\Projects\\HttpScreenshotComparer\\HttpScreenshotComparer\\configs\\chrome-example1\\cla-preprod-screenshot.yaml\" -m Screenshot"
+      "commandLineArgs": "-c \"D:\\Projects\\HttpScreenshotComparer\\HttpScreenshotComparer\\configs\\chrome-example1\\cla-preprod-prod-compare.yaml\" -m Compare"
     }
   }
 }

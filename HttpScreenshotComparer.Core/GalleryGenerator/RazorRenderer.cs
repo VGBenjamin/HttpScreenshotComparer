@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using HttpScreenshotComparer.Core.Logging;
+using Microsoft.Extensions.Logging;
 using RazorLight;
 
 namespace HttpScreenshotComparer.Core.GalleryGenerator
@@ -11,6 +14,13 @@ namespace HttpScreenshotComparer.Core.GalleryGenerator
     /// </summary>
     public class RazorRenderer : IRazorRenderer
     {
+        private readonly ILogger<RazorRenderer> _logger;
+
+        public RazorRenderer(ILogger<RazorRenderer> logger)
+        {
+            _logger = logger;
+        }
+
         public virtual string[] GetViewContent(string viewPath)
         {
             return System.IO.File.ReadAllLines(viewPath);
@@ -52,6 +62,40 @@ namespace HttpScreenshotComparer.Core.GalleryGenerator
             }
 
             return result;
+        }
+
+        public void RenderAndSave<T>(string viewPath, T model, string targetFile)
+        {
+            var result = Render(viewPath, model);
+            if (string.IsNullOrEmpty(result))
+            {
+                _logger.LogError(EventIds.RazorRenderingResultIsEmpty, "The result of the razor rendering is null or empty", this);
+            }
+            else
+            {
+                try
+                {
+                    if (File.Exists(result))
+                    {
+                        File.Delete(result);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(EventIds.CannotDeleteOldGaleryFile, ex, $"Cannot delete the already existing file for the gallery: '{result}'", this);
+                    throw;
+                }
+
+                try
+                {                   
+                    System.IO.File.WriteAllText(targetFile, result);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(EventIds.RazorRenderingResultIsEmpty, ex, $"Cannot save the result of the razor rendering to '{targetFile}'", this);
+                    throw;
+                }
+            }
         }
     }
 }

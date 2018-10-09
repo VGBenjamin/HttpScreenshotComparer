@@ -5,6 +5,8 @@ using System.Text;
 using FluentAssertions;
 using HttpScreenshotComparer.Core.Image;
 using ImageMagick;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace HttpScreenshotComparer.Core.Test.Image.Comparision
@@ -28,7 +30,9 @@ namespace HttpScreenshotComparer.Core.Test.Image.Comparision
             var target = $"{currentPath}\\Image\\TestFiles\\{targetImage}";
             var diff = $"{currentPath}\\Image\\TestFiles\\Result_{testName}.bmp";
 
-            var imageComparer = new ImageComparer();
+            var logger = new Mock<ILogger<ImageComparer>>();
+
+            var imageComparer = new ImageComparer(logger.Object);
 
             //Act
             var difference = imageComparer.Compare(source, target, fuzz, diff);
@@ -58,7 +62,8 @@ namespace HttpScreenshotComparer.Core.Test.Image.Comparision
             if (!string.IsNullOrEmpty(diffSavePath))
                 diffSavePath = diffSavePath.Replace("$imagesPath$", imagesPath);
 
-            var imageComparer = new ImageComparer();
+            var logger = new Mock<ILogger<ImageComparer>>();
+            var imageComparer = new ImageComparer(logger.Object);
             
             //Act
             Exception ex = Assert.Throws<ArgumentException>(() => imageComparer.Compare(sourcePath, targetPath, fuzziness, diffSavePath));
@@ -86,7 +91,8 @@ namespace HttpScreenshotComparer.Core.Test.Image.Comparision
             if (!string.IsNullOrEmpty(diffSavePath))
                 diffSavePath = targetPath.Replace("$imagesPath$", imagesPath);
 
-            var imageComparer = new ImageComparer();
+            var logger = new Mock<ILogger<ImageComparer>>();
+            var imageComparer = new ImageComparer(logger.Object);
 
             //Act
             Exception ex = Assert.Throws<MagickBlobErrorException>(() => imageComparer.Compare(sourcePath, targetPath, fuzziness, diffSavePath));

@@ -29,6 +29,8 @@ namespace HttpScreenshotComparer.Core.Configuration
                 var deserialized = deserializer.Deserialize<UserConfig>(text);
                 deserialized.ScriptFileFullPath =
                     Path.GetFullPath($"{Path.GetDirectoryName(filePath)}{PathUtils.MapPath(deserialized.ScriptFilePath)}");
+                deserialized.GalleryTemplateFullPath =
+                    Path.GetFullPath($"{Path.GetDirectoryName(filePath)}{PathUtils.MapPath(deserialized.GalleryTemplate)}");
                 return deserialized;
             }
         }

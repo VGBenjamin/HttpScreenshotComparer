@@ -44,6 +44,7 @@ namespace HttpScreenshotComparer.Core.Test.Configuration
 
             result.ScriptFilePath.Should().Be("./example1.js");
             result.GalleryTemplate.Should().Be("./example1.cshtml");
+            result.GalleryResult.Should().Be(@"d:\temp\gallery.html");
 
             result.Domain.Should().Be("www.test.com");
 

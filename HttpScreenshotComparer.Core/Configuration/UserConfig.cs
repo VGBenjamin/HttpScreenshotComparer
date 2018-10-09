@@ -41,6 +41,9 @@ namespace HttpScreenshotComparer.Core.Configuration
 
         public string HighlightColor { get; set; }
         public string GalleryTemplate { get; set; }
+        public string GalleryTemplateFullPath { get; set; }
+        public string GalleryResult { get; set; }
+
         public string Domain { get; set; }
         public int NumberOfThreads { get; set; }
 

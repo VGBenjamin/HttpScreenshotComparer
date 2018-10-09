@@ -2,10 +2,91 @@
 
 <html>
 <head>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 300;
+            line-height: 1.42em;
+            color: #A7A1AE;
+            background-color: #1F2739;
+        }
+
+        h1 {
+            font-size: 2em;
+            font-weight: 300;
+            line-height: 1em;
+            text-align: center;
+            color: #4DC3FB;
+        }
+
+        .blue {
+            color: #185875;
+        }
+
+
+        .container th h1 {
+            font-weight: bold;
+            font-size: 1em;
+            text-align: left;
+            color: #185875;
+        }
+
+        .container td {
+            font-weight: normal;
+            font-size: 1em;
+            -webkit-box-shadow: 0 2px 2px -2px #0E1119;
+            -moz-box-shadow: 0 2px 2px -2px #0E1119;
+            box-shadow: 0 2px 2px -2px #0E1119;
+        }
+
+        .container {
+            text-align: left;
+            overflow: hidden;
+            width: 80%;
+            margin: 0 auto;
+            display: table;
+            padding: 0 0 8em 0;
+        }
+
+            .container td, .container th {
+                padding-bottom: 2%;
+                padding-top: 2%;
+                padding-left: 2%;
+                text-align: center;
+            }
+
+            .container tr:nth-child(odd) {
+                background-color: #323C50;
+            }
+
+            .container tr:nth-child(even) {
+                background-color: #2C3446;
+            }
+
+            .container th {
+                background-color: #1F2739;
+            }
+
+            .container td:first-child {
+                color: #FB667A;
+            }
+
+            .container tr:hover {
+                background-color: #464A52;
+                -webkit-box-shadow: 0 6px 6px -6px #0E1119;
+                -moz-box-shadow: 0 6px 6px -6px #0E1119;
+                box-shadow: 0 6px 6px -6px #0E1119;
+            }
+
+
+        .thumb {
+            max-width: 150px;
+        }
+    </style>
 </head>
 <body>
     <h1>Comparision of the screenshot from: @Model.SourceDirectory to @Model.TargetDirectory</h1>
-    <table>
+    <table class="container">
         <thead>
             <tr>
                 <td>Url</td>
@@ -16,17 +97,18 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var line in Model.Lines.OrderByDescending(l => l.DifferenceRate))
-        {
-            <tr>
-                <td><a href="@line.Url">@line.Name</a></td>
-                <td>@line.DifferenceRate</td>
+            <!-- .OrderByDescending(l => l.DifferenceRate) -->
+            @foreach (var line in Model.Lines.OrderByDescending(x => x.DifferenceRate))
+            {
+                <tr>
+                    <td><a href="@line.Url">@line.Name</a></td>
+                    <td>@line.DifferenceRate &percnt;</td>
 
-                <td><img src="@line.SourceImage" /></td>
-                <td><img src="@line.TargetImage" /></td>
-                <td><img src="@line.DifferencesImage" /></td>
-            </tr>
-        }
+                    <td><img src="@line.SourceImage" class="thumb" /></td>
+                    <td><img src="@line.TargetImage" class="thumb" /></td>
+                    <td><img src="@line.DifferencesImage" class="thumb" /></td>
+                </tr>
+            }
         </tbody>
     </table>
 </body>

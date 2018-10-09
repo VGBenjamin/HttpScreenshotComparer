@@ -1,11 +1,21 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
+using HttpScreenshotComparer.Core.Logging;
 using ImageMagick;
+using Microsoft.Extensions.Logging;
 
 namespace HttpScreenshotComparer.Core.Image
 {
     public class ImageComparer : IImageComparer
     {
+        private readonly ILogger<ImageComparer> _logger;
+
+        public ImageComparer(ILogger<ImageComparer> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Compare two image and save the result of the comparision
         /// </summary>
@@ -13,7 +23,7 @@ namespace HttpScreenshotComparer.Core.Image
         /// <param name="targetPath">The target Image path</param>
         /// <param name="diffSavePath">The path where the result of the comparision will be saved. If null, the result will be not saved</param>
         /// <returns>Returns the percentage of differences between the two images</returns>
-        public double Compare(string sourcePath, string targetPath, int fuzziness, string diffSavePath = null, string highlightColor = "#FF0000")
+        public double Compare(string sourcePath, string targetPath, int fuzziness, string diffSavePath = null, string highlightColor = "FF0000")
         {
             if (string.IsNullOrEmpty(sourcePath))
                 throw new ArgumentException("The parameter is required", nameof(sourcePath));
@@ -30,9 +40,22 @@ namespace HttpScreenshotComparer.Core.Image
             using (var magickTarget = new MagickImage(targetPath))
             using (var diffImage = new MagickImage())
             {
+                MagickColor magicHighlightColor;
+                try
+                {
+                    highlightColor = Regex.Replace(highlightColor, "[0-9A-F]{3,6}", "#$0");
+                    magicHighlightColor = new MagickColor(highlightColor);
+                }
+                catch
+                {
+                    _logger.LogError(EventIds.InvalidColor, $"The color '{highlightColor}' is not a valid color. You can use html colors withou prefixed or a color name.");
+                    throw;
+                }
+
+
                 var compareSettigns = new CompareSettings()
                 {
-                    HighlightColor = new MagickColor(highlightColor),
+                    HighlightColor = magicHighlightColor,
                     //LowlightColor = new MagickColor("blue"),
                     //MasklightColor = new MagickColor("yellow"),
                     Metric = ErrorMetric.Absolute

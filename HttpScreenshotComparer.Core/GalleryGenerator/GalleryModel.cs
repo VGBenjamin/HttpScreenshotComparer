@@ -8,7 +8,8 @@ namespace HttpScreenshotComparer.Core.GalleryGenerator
     {
         public string SourceDirectory { get; set; }
         public string TargetDirectory { get; set; }
-        public List<GalleryLine> Lines { get; set; }
+        public List<GalleryLine> Lines { get; set; } = new List<GalleryLine>();
+        public string ResultDirectory { get; set; }
     }
     public class GalleryLine
     {

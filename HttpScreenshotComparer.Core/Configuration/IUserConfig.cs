@@ -7,6 +7,8 @@ namespace HttpScreenshotComparer.Core.Configuration
         string Domain { get; set; }
         int Fuzziness { get; set; }
         string GalleryTemplate { get; set; }
+        string GalleryResult { get; set; }
+        string GalleryTemplateFullPath { get; set; }
         string HighlightColor { get; set; }
         int NumberOfThreads { get; set; }
         List<int> ScreenWidth { get; set; }

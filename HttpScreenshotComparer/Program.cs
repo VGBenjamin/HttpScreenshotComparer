@@ -10,6 +10,7 @@ using HttpScreenshotComparer.Core.Engine;
 using HttpScreenshotComparer.Core.GalleryGenerator;
 using HttpScreenshotComparer.Core.Image;
 using HttpScreenshotComparer.Core.Logging;
+using HttpScreenshotComparer.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -102,6 +103,8 @@ namespace HttpScreenshotComparer
             services.AddSingleton<IImageComparer, ImageComparer>();
             services.AddSingleton<IImageResizer, ImageResizer>();
             services.AddSingleton<IBrowserFactory, BrowserFactory>();
+            services.AddSingleton<IDirectoryUtils, DirectoryUtils>();
+            services.AddSingleton<IDirectoryProvider, DirectoryProvider>();
 
             services.AddLogging((builder) => builder.SetMinimumLevel(LogLevel.Trace));
 
